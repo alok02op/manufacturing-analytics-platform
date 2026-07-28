@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  ENGINEER
+  MANAGER
+}
+
+enum MachineStatus {
+  RUNNING
+  STOPPED
+  MAINTENANCE
+}
+
+enum DowntimeReason {
+  MAINTENANCE
+  POWER_FAILURE
+  SENSOR_FAILURE
+  OPERATOR_BREAK
+  MATERIAL_SHORTAGE
+  OTHER
+}
+
+enum UploadStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      UserRole @default(ENGINEER)
+  uploads   Upload[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Factory {
+  id        Int      @id @default(autoincrement())
+  name      String
+  location  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  productionLines ProductionLine[]
+}
+
+model ProductionLine {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  factoryId Int
+  factory   Factory @relation(fields: [factoryId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  machines Machine[]
+}
+
+model Machine {
+  id Int @id @default(autoincrement())
+
+  machineCode String
+  name        String
+  status      MachineStatus @default(RUNNING)
+
+  productionLineId Int
+  productionLine   ProductionLine @relation(fields: [productionLineId], references: [id])
+
+  productionBatches ProductionBatch[]
+  downtimeEvents    DowntimeEvent[]
+  sensorReadings    SensorReading[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productionLineId, machineCode])
+}
+
+model ProductionBatch {
+  id Int @id @default(autoincrement())
+
+  batchNumber String @unique
+
+  machineId Int
+  machine   Machine @relation(fields: [machineId], references: [id])
+
+  quantityProduced Int
+  defectiveUnits   Int
+
+  startedAt DateTime
+  endedAt   DateTime
+
+  createdAt DateTime @default(now())
+
+  @@index([machineId])
+}
+
+model DowntimeEvent {
+  id Int @id @default(autoincrement())
+
+  machineId Int
+  machine   Machine @relation(fields: [machineId], references: [id])
+
+  reason DowntimeReason
+
+  startedAt DateTime
+  endedAt   DateTime
+
+  createdAt DateTime @default(now())
+
+  @@index([machineId])
+}
+
+model SensorReading {
+  id Int @id @default(autoincrement())
+
+  machineId Int
+  machine   Machine @relation(fields: [machineId], references: [id])
+
+  temperature Float
+  pressure    Float
+
+  recordedAt DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([machineId, recordedAt])
+}
+
+model Upload {
+  id Int @id @default(autoincrement())
+
+  originalFilename String
+  storedFilename   String
+
+  status UploadStatus @default(PENDING)
+
+  uploadedById Int
+  uploadedBy   User @relation(fields: [uploadedById], references: [id])
+
+  uploadedAt DateTime @default(now())
+
+  @@index([uploadedById])
+}

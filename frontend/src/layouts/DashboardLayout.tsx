@@ -1,20 +1,25 @@
 import { Outlet } from "react-router-dom";
 
-function DashboardLayout() {
-  return (
-    <div className="min-h-screen bg-slate-100">
-      {/* Header */}
-      <header className="border-b bg-white px-6 py-4 shadow-sm">
-        <h1 className="text-xl font-bold">
-          Manufacturing Analytics
-        </h1>
-      </header>
+import AppSidebar from "@/components/app-sidebar";
+import SiteHeader from "@/components/site-header";
 
-      <main className="p-6">
-        <Outlet />
-      </main>
-    </div>
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@/components/ui/sidebar";
+
+export default function DashboardLayout() {
+  return (
+    <SidebarProvider defaultOpen>
+      <AppSidebar />
+
+      <SidebarInset>
+        <SiteHeader />
+
+        <main className="flex-1 p-6">
+          <Outlet />
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
-
-export default DashboardLayout;

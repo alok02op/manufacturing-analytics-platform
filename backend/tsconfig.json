@@ -4,6 +4,12 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
 
+    "baseUrl": "./src",
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@/*": ["*"]
+    },
+
     "rootDir": "./src",
     "outDir": "./dist",
 
@@ -24,6 +30,6 @@
     "exactOptionalPropertyTypes": true
   },
 
-  "include": ["src"],
+  "include": ["src", ".ts"],
   "exclude": ["node_modules", "dist"]
 }

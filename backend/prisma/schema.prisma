@@ -40,6 +40,12 @@ enum UploadStatus {
   FAILED
 }
 
+enum ProductionLineStatus {
+  ACTIVE
+  INACTIVE
+  MAINTENANCE
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   name      String
@@ -65,12 +71,20 @@ model ProductionLine {
   id   Int    @id @default(autoincrement())
   name String
 
+  code        String
+  description String?
+  status      ProductionLineStatus @default(ACTIVE)
+
   factoryId Int
   factory   Factory @relation(fields: [factoryId], references: [id])
 
-  createdAt DateTime @default(now())
-
   machines Machine[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([factoryId, code])
+  @@index([factoryId])
 }
 
 model Machine {

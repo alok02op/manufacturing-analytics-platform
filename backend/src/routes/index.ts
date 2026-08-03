@@ -1,13 +1,14 @@
-import healthRoutes from './health.routes.js'
-import authRoutes from './auth.routes.js'
-import { Router } from 'express'
+import healthRoutes from "./health.routes.js";
+import authRoutes from "./auth.routes.js";
 import factoryRoutes from "./factory.routes.js";
+import productionLineRoutes from "./productionLine.routes.js";
+import { Router } from "express";
 
-const router = Router()
+const router = Router();
 
-router.use("/health", healthRoutes)
-router.use("/auth", authRoutes)
+router.use("/health", healthRoutes);
+router.use("/auth", authRoutes);
 router.use("/factories", factoryRoutes);
+router.use("/production-lines", productionLineRoutes);
 
-export default router
-
+export default router;

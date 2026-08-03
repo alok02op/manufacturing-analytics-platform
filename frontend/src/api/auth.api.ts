@@ -1,10 +1,34 @@
 import { api } from "./axios";
-import type { RegisterRequest, LoginRequest } from "@/types/auth.types.js";
 
-export const register = (data: RegisterRequest) => api.post("/auth/register", data);
+import type { ApiResponse } from "@/types/api.types";
+import type {
+    LoginRequest,
+    RegisterRequest,
+    User,
+} from "@/types/auth.types";
 
-export const login = (data: LoginRequest) => api.post("/auth/login", data);
+export const register = (
+    data: RegisterRequest
+) =>
+    api.post<ApiResponse<User>>(
+        "/auth/register",
+        data
+    );
 
-export const logout = () => api.post("/auth/logout");
+export const login = (
+    data: LoginRequest
+) =>
+    api.post<ApiResponse<User>>(
+        "/auth/login",
+        data
+    );
 
-export const getCurrentUser = () => api.get("/auth/me");
+export const logout = () =>
+    api.post<ApiResponse<null>>(
+        "/auth/logout"
+    );
+
+export const getCurrentUser = () =>
+    api.get<ApiResponse<User>>(
+        "/auth/me"
+    );

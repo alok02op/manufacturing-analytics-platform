@@ -9,6 +9,22 @@ import {
 
 import { Button } from "@/components/ui/button";
 import type { Factory } from "@/types/factory.types";
+// --------
+import { Card, CardContent } from "@/components/ui/card";
+import { Tooltip } from "@/components/ui/tooltip";
+import {
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import {
+    Pencil,
+    Trash2,
+} from "lucide-react";
+import { formatDate } from "@/lib/date";
+
+import { LoadingState } from "@/components/ui/LoadingState";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 interface FactoryTableProps {
     factories: Factory[];
@@ -29,79 +45,96 @@ export default function FactoryTable({
 }: FactoryTableProps) {
     if (loading) {
         return (
-            <div className="flex h-60 items-center justify-center">
-                Loading factories...
-            </div>
+            <LoadingState message="Loading factories..." />
         );
     }
+
     if (factories.length === 0) {
         return (
-            <div className="rounded-lg border py-10 text-center text-muted-foreground">
-                No factories found.
-            </div>
+            <EmptyState
+                title="No factories found"
+                description="Create your first factory to get started."
+            />
         );
     }
 
     return (
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead>Name</TableHead>
+        <Card>
+            <CardContent className="p-0">
+                <Table>
+                    <TableHeader>
+                        <TableRow className="hover:bg-muted/40 transition-colors">
+                            <TableHead>Name</TableHead>
+                            <TableHead>Location</TableHead>
+                            <TableHead>Created</TableHead>
+                            {canManage && (
+                                <TableHead className="text-right">
+                                    Actions
+                                </TableHead>
+                            )}
+                        </TableRow>
+                    </TableHeader>
 
-                    <TableHead>Location</TableHead>
+                    <TableBody>
+                        {factories.map((factory) => (
+                            <TableRow key={factory.id}>
+                                <TableCell className="font-medium">
+                                    {factory.name}
+                                </TableCell>
 
-                    <TableHead>Created</TableHead>
+                                <TableCell>
+                                    {factory.location}
+                                </TableCell>
 
-                    {canManage && (
-                        <TableHead className="text-right">
-                            Actions
-                        </TableHead>
-                    )}
-                </TableRow>
-            </TableHeader>
+                                <TableCell>
+                                    {formatDate(factory.createdAt)}
+                                </TableCell>
+                                {canManage && (
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-1">
+                                            <Tooltip>
+                                                <TooltipTrigger
+                                                    render={
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            onClick={() => onEdit(factory)}
+                                                        >
+                                                            <Pencil className="h-4 w-4" />
+                                                        </Button>
+                                                    }
+                                                />
 
-            <TableBody>
-                {factories.map((factory) => (
-                    <TableRow key={factory.id}>
-                        <TableCell className="font-medium">
-                            {factory.name}
-                        </TableCell>
-
-                        <TableCell>
-                            {factory.location}
-                        </TableCell>
-
-                        <TableCell>
-                            {new Date(
-                                factory.createdAt
-                            ).toLocaleDateString()}
-                        </TableCell>
-                        {canManage && (
-                            <TableCell className="space-x-2 text-right">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() =>
-                                        onEdit(factory)
-                                    }
-                                >
-                                    Edit
-                                </Button>
-
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    onClick={() =>
-                                        onDelete(factory)
-                                    }
-                                >
-                                    Delete
-                                </Button>
-                            </TableCell>
-                        )}
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+                                                <TooltipContent>
+                                                    Edit Factory
+                                                </TooltipContent>
+                                            </Tooltip>        
+                                            <Tooltip>
+                                                <TooltipTrigger
+                                                    render={
+                                                        <Button
+                                                            variant="destructive"
+                                                            size="icon"
+                                                            onClick={() =>
+                                                                onDelete(factory)
+                                                            }
+                                                        >
+                                                            <Trash2 className="h-4 w-4 text-destructive" />
+                                                        </Button>
+                                                    }
+                                                />
+                                                <TooltipContent>
+                                                    Edit Factory
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </div>
+                                    </TableCell>
+                                )}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
     );
 }

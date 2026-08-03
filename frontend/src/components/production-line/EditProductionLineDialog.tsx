@@ -1,42 +1,53 @@
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogDescription
 } from "@/components/ui/dialog";
 
-import FactoryForm from "./FactoryForm";
+import ProductionLineForm from "./ProductionLineForm";
 
 import type {
-    Factory,
-    UpdateFactoryDto,
-} from "@/types/factory.types";
+    FactoryOption,
+    ProductionLine,
+    UpdateProductionLineDto,
+} from "@/types/productionLine";
 
 interface Props {
     open: boolean;
-    factory: Factory | null;
+
     loading?: boolean;
+
+    productionLine: ProductionLine | null;
+
+    factories: FactoryOption[];
+
     onOpenChange: (open: boolean) => void;
+
     onUpdate: (
         id: number,
-        data: UpdateFactoryDto
+        data: UpdateProductionLineDto
     ) => Promise<void>;
 }
 
-export default function EditFactoryDialog({
+export default function EditProductionLineDialog({
     open,
-    factory,
     loading,
+    productionLine,
+    factories,
     onOpenChange,
     onUpdate,
 }: Props) {
-    if (factory == null) return null;
-    
+    if (!productionLine) return null;
+
     const handleUpdate = async (
-        values: UpdateFactoryDto
+        values: UpdateProductionLineDto
     ) => {
-        await onUpdate(factory.id, values);
+        await onUpdate(
+            productionLine.id,
+            values
+        );
 
         onOpenChange(false);
     };
@@ -49,18 +60,20 @@ export default function EditFactoryDialog({
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Edit Factory
+                        Edit Production Line
                     </DialogTitle>
 
                     <DialogDescription>
-                        Update the factory information.
+                        Update production line
+                        information.
                     </DialogDescription>
                 </DialogHeader>
 
-                <FactoryForm
-                    defaultValues={factory}
+                <ProductionLineForm
+                    factories={factories}
+                    defaultValues={productionLine as UpdateProductionLineDto}
                     loading={loading}
-                    submitText="Update Factory"
+                    submitText="Update Production Line"
                     onSubmit={handleUpdate}
                 />
             </DialogContent>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 import CreateFactoryDialog from "@/components/factory/CreateFactoryDialog";
 import DeleteFactoryDialog from "@/components/factory/DeleteFactoryDialog";
@@ -10,6 +11,8 @@ import FactoryTable from "@/components/factory/FactoryTable";
 import { useFactories } from "@/hooks/useFactories";
 import { useAppSelector } from "@/hooks/redux";
 import type { Factory } from "@/types/factory.types";
+
+import { Factory as FactoryIcon } from "lucide-react";
 
 export default function FactoriesPage() {
     const {
@@ -38,25 +41,26 @@ export default function FactoriesPage() {
         useState<Factory | null>(null);
 
     return (
-        <div className="space-y-6 p-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold">
-                        Factories
-                    </h1>
+        <div className="space-y-6 p-8">
+            <PageHeader
+                title={
+                    <div className="flex items-center gap-2">
+                        <FactoryIcon className="h-7 w-7 text-primary" />
 
-                    <p className="text-muted-foreground">
-                        Manage your manufacturing factories.
-                    </p>
-                </div>
-                {canManageFactories && (
-                    <Button
-                        onClick={() => setCreateOpen(true)}
-                    >
-                        New Factory
-                    </Button>
-                )}
-            </div>
+                        <span>Factories</span>
+                    </div>
+                }
+                description="Manage your manufacturing factories."
+                actions={
+                    canManageFactories ? (
+                        <Button
+                            onClick={() => setCreateOpen(true)}
+                        >
+                            New Factory
+                        </Button>
+                    ) : undefined
+                }
+            />
 
             <FactoryTable
                 factories={factories}

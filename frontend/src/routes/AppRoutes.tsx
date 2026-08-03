@@ -5,6 +5,7 @@ import AuthLayout from "@/layouts/AuthLayout";
 
 import DashboardPage from "@/pages/Dashboard/DashboardPage";
 import FactoriesPage from "@/pages/Factories/FactoriesPage";
+import ProductionLinesPage from "@/pages/ProductionLine/ProductionLinesPage";
 
 import LoginPage from "@/pages/Auth/LoginPage";
 import RegisterPage from "@/pages/Auth/RegisterPage";
@@ -43,6 +44,10 @@ export default function AppRoutes() {
                     <Route
                         path="factories"
                         element={<FactoriesPage />}
+                    />
+                    <Route
+                        path="production-lines"
+                        element={<ProductionLinesPage />}
                     />
                 </Route>
             </Route>

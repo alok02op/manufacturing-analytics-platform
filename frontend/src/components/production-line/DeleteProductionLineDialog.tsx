@@ -1,39 +1,39 @@
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogDescription
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
 
-import type { Factory } from "@/types/factory.types";
+import type { ProductionLine } from "@/types/productionLine";
 
 interface Props {
     open: boolean;
 
     loading?: boolean;
 
-    factory: Factory | null;
+    productionLine: ProductionLine | null;
 
     onOpenChange: (open: boolean) => void;
 
     onDelete: (id: number) => Promise<void>;
 }
 
-export default function DeleteFactoryDialog({
+export default function DeleteProductionLineDialog({
     open,
     loading,
-    factory,
+    productionLine,
     onOpenChange,
     onDelete,
 }: Props) {
-    if (!factory) return null;
+    if (!productionLine) return null;
 
     const handleDelete = async () => {
-        await onDelete(factory.id);
+        await onDelete(productionLine.id);
 
         onOpenChange(false);
     };
@@ -46,16 +46,20 @@ export default function DeleteFactoryDialog({
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Delete Factory
+                        Delete Production Line
                     </DialogTitle>
+
                     <DialogDescription>
                         This action cannot be undone.
                     </DialogDescription>
                 </DialogHeader>
-                
-                <p className="text-sm">
-                    Are you sure you want to delete{" "}
-                    <span className="font-semibold"> {factory.name} </span>?
+
+                <p className="text-sm text-muted-foreground">
+                    You are about to permanently delete{" "}
+                    <span className="font-medium text-foreground">
+                        {productionLine.name}
+                    </span>
+                    . This action cannot be undone.
                 </p>
 
                 <DialogFooter>

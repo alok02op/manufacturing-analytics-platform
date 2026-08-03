@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errors";
 
 import {
     createFactory,
@@ -31,8 +32,10 @@ export function useFactories() {
             setFactories(response.data.data);
         } catch (error: any) {
             toast.error(
-                error.response?.data?.message ??
+                getErrorMessage(
+                    error,
                     "Failed to fetch factories"
+                )
             );
         } finally {
             setIsFetching(false);
@@ -56,8 +59,10 @@ export function useFactories() {
             await fetchFactories();
         } catch (error: any) {
             toast.error(
-                error.response?.data?.message ??
+                getErrorMessage(
+                    error,
                     "Failed to create factory"
+                )
             );
 
             throw error;
@@ -80,8 +85,10 @@ export function useFactories() {
             await fetchFactories();
         } catch (error: any) {
             toast.error(
-                error.response?.data?.message ??
+                getErrorMessage(
+                    error,
                     "Failed to update factory"
+                )
             );
 
             throw error;
@@ -103,8 +110,10 @@ export function useFactories() {
             await fetchFactories();
         } catch (error: any) {
             toast.error(
-                error.response?.data?.message ??
+                getErrorMessage(
+                    error,
                     "Failed to delete factory"
+                )
             );
         } finally {
             setIsDeleting(false);

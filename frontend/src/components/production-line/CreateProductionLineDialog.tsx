@@ -1,29 +1,43 @@
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogDescription
 } from "@/components/ui/dialog";
 
-import FactoryForm from "./FactoryForm";
-import type { CreateFactoryDto } from "@/types/factory.types";
+import ProductionLineForm from "./ProductionLineForm";
+
+import type {
+    CreateProductionLineDto,
+    FactoryOption,
+} from "@/types/productionLine";
 
 interface Props {
     open: boolean;
     loading?: boolean;
+
+    factories: FactoryOption[];
+
     onOpenChange: (open: boolean) => void;
-    onCreate: (data: CreateFactoryDto) => Promise<void>;
+
+    onCreate: (
+        data: CreateProductionLineDto
+    ) => Promise<void>;
 }
 
-export default function CreateFactoryDialog({
+export default function CreateProductionLineDialog({
     open,
     loading,
+    factories,
     onCreate,
     onOpenChange,
 }: Props) {
-    const handleCreate = async (values: CreateFactoryDto) => {
+    const handleCreate = async (
+        values: CreateProductionLineDto
+    ) => {
         await onCreate(values);
+
         onOpenChange(false);
     };
 
@@ -35,17 +49,19 @@ export default function CreateFactoryDialog({
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>
-                        Create Factory
+                        Create Production Line
                     </DialogTitle>
 
                     <DialogDescription>
-                        Add a new manufacturing facility.
+                        Add a new production line to a
+                        factory.
                     </DialogDescription>
                 </DialogHeader>
 
-                <FactoryForm
+                <ProductionLineForm
+                    factories={factories}
                     loading={loading}
-                    submitText="Create Factory"
+                    submitText="Create Production Line"
                     onSubmit={handleCreate}
                 />
             </DialogContent>

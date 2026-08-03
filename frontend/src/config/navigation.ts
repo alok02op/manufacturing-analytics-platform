@@ -31,7 +31,7 @@ export const mainNav: NavItem[] = [
     title: "Production Lines",
     path: "/production-lines",
     icon: Workflow,
-    disabled: true,
+    disabled: false,
   },
   {
     title: "Machines",

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/errors";
 
 import {
     login,
@@ -40,7 +41,12 @@ export function useAuth() {
         } catch (error) {
             console.error(error);
 
-            toast.error("Invalid email or password");
+            toast.error(
+                getErrorMessage(
+                    error,
+                    "Invalid email or password"
+                )
+            );
 
             throw error;
         }
@@ -60,7 +66,12 @@ export function useAuth() {
         } catch (error) {
             console.error(error);
 
-            toast.error("Registration failed");
+            toast.error(
+                getErrorMessage(
+                    error,
+                    "Registration failed"
+                )
+            );
 
             throw error;
         }
@@ -79,8 +90,13 @@ export function useAuth() {
             });
         } catch (error) {
             console.error(error);
-
-            toast.error("Logout failed");
+            
+            toast.error(
+                getErrorMessage(
+                    error,
+                    "Logout failed"
+                )
+            );
 
             throw error;
         }
